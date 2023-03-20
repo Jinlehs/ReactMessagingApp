@@ -1,51 +1,44 @@
 import React, {useState} from 'react';
-import {ChatEngine, getOrCreateChat} from 'react-chat-engine'
+import {ChatEngine, getOrCreateChat, getUsers} from 'react-chat-engine'
 
 const DirectMessaging = () => {
     // The useState hook initially sets the username to an empty string
     const[username, setUsername] = useState('')
-    //Custom function that will implement the getOrCreateChat function to select username to chat with
-    //only when the correct credentials(user  secret, project id, username) are passed will the application be rendered
-    function implementingDirectChat(credentials: any){
-        getOrCreateChat(
-            credentials,
-            // function will only work if the app is a Direct Messaging one, hence setting 'is_direct_chat' to true and consequentially setting a list of usernames to search from.
-            {is_direct_chat: true, usernames:[username]},
-            () => setUsername('')
-        )
-    }
+    
+    function createDirectChat(creds:any) {
+		getOrCreateChat(
+			creds,
+			{ is_direct_chat: true, usernames: [username] },
+			() => setUsername('')
+		)
+	}
 
-    const displayChatInterface = (credentials: any) => {
-        return (
-            <div>
-                <input
-                    type="text"
-                    placeholder='Find username'
-                    value={username} //prop from the useState hook
-                    // A controlled function that sets the username to what the user types in the input field
-                    onChange = {(e) => setUsername(e.target.value)}
-                />
-
-                {/* clicking button will call the implementingDirectChat function that displays a list of usernames to create or find an existing chat.  */}
-                <button onClick={() => implementingDirectChat(credentials)}>
-                    Create Chat
-                </button>
-
-            </div>
-        )
-    }
+    function renderChatForm(creds:any) {
+		return (
+			<div>
+				<input 
+					placeholder='Username' 
+					value={username} 
+					onChange={(e) => setUsername(e.target.value)} 
+				/>
+				<button onClick={() => createDirectChat(creds)}>
+					Create
+				</button>
+			</div>
+		)
+	}
 
     return(
         <ChatEngine
-            height='100vh'
+            height='70vh'
             userName='JinLee'
             // Accessing the stored environment variables in .env file
-            
             userSecret={process.env.REACT_APP_USER_SECRET}
             projectID={process.env.REACT_APP_PROJECT_ID}
             privateKey={process.env.REACT_APP_PRIVATE_KEY}
-            displayNewChatInterface={(credentials: any) => displayChatInterface(credentials)}
-            />
+            // displayNewChatInterface={(credentials: any) => displayChatInterface(credentials)}
+            renderNewChatForm={(creds:any) => renderChatForm(creds)}
+        />
     )
 }
 
