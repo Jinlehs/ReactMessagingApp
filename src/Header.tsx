@@ -87,13 +87,6 @@ const Header = () => {
                                 Add User
                         </button>
                     </div>
-                        <button 
-                            id="dropdownDefaultButton" 
-                            data-dropdown-toggle="dropdown"
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full "
-                            onClick={() => getUsers()}>
-                                Get Users
-                        </button>
                 </div>
             </div>
         </>
