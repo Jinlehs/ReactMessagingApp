@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {ChatEngine, getOrCreateChat, getUsers, deleteChat} from 'react-chat-engine'
 import axios from 'axios'
 
@@ -7,6 +7,13 @@ const DirectMessaging = () => {
     const[username, setUsername] = useState('')
     const [error, setError] = useState('')
     var userName: string = ''; 
+
+    useEffect(() => {
+        getUsers()
+        setTimeout(()=> {
+            handleDropDown()
+        }, 1000)
+    }, [])
     
     function createDirectChat(cred:any) {
         console.log([username])
@@ -16,7 +23,7 @@ const DirectMessaging = () => {
 			() => setUsername('')
 		)
 	}
-    
+
     function deleteDirectChat(cred:any, chat:any) {
         deleteChat(
             cred, chat.id
@@ -27,15 +34,6 @@ const DirectMessaging = () => {
     var listOfUsers: any[] = [] 
 
     const handleDropDown = () => {
-        //setOpen(!isOpen);
-        //   let text = ""
-        //   for (let i = 0; i < listOfUserNames.length; i++) {
-        //       text += listOfUserNames[i] + "<br>"
-        //   }
-        //   const output = document.getElementById("users")
-        //   if (output) output.innerHTML = text
-
-
         var myParent = document.getElementsByClassName("test")[0]
         var selectList = document.getElementsByClassName("selector")[0];
         myParent.appendChild(selectList);
@@ -48,11 +46,6 @@ const DirectMessaging = () => {
         }
         console.log(selectList)
       };
-
-      function handleChange(e:any) {
-        console.log(e.target.value)
-        userName = e.target.value
-      }
 
     const getUsers = async () => {
         //header for authentication
@@ -76,59 +69,36 @@ const DirectMessaging = () => {
     function renderChatForm(cred:any) {
 		return (
 			<div>
-				<input 
-					placeholder='Username' 
-					value={username} 
-					onChange={(e) => setUsername(e.target.value)} 
-				/>
-				<button onClick=
-                {() => {
-                    createDirectChat(cred)
-                    refreshPage()
-                }}>
-					Create
-				</button>
-                <div className="dropdown">
-                    <div>
-                        <button
-                            onClick={getUsers}>
-                                getUsers
-                        </button>
+                {/* <div className='flex flex-wrap'>
+                    <div className='pr-2'>
+                        <input 
+                            placeholder='Username' 
+                            value={username} 
+                            onChange={(e) => setUsername(e.target.value)} 
+                        />
                     </div>
-                    <button
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center"
-                    onClick={handleDropDown}
-                    >
-                    user dropdown
-                    <svg
-                        className="ml-2 w-4 h-4"
-                        aria-hidden="true"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                        ></path>
-                    </svg>
+                    <button onClick=
+                        {() => {
+                            createDirectChat(cred)
+                            refreshPage()
+                        }}>
+                            Create
+                    </button>
+                </div> */}
+                <div className='flex flex-wrap cursor-pointer'>
+                    <ul className="test pr-2">
+                        <select className="selector cursor-pointer"
+                            onChange={(e) => setUsername(e.target.value)}>
+                        </select>
+                    </ul>
+                    <button onClick=
+                        {() => {
+                            createDirectChat(cred)
+                            refreshPage()
+                        }}>
+                            Create Chat
                     </button>
                 </div>
-                <ul className="test">
-                    <select className="selector"
-                        onChange={(e) => setUsername(e.target.value)}>
-                    </select>
-                </ul>
-                <button onClick=
-                {() => {
-                    createDirectChat(cred)
-                    refreshPage()
-                }}>
-                    create chat
-                </button>
 			</div>
 		)
 	}
